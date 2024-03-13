@@ -21,7 +21,7 @@ export type Restaurant = {
   country: string;
   deliveryPrice: number;
   estimatedDeliveryTime: number;
-  cuisine: string[];
+  cuisines: string[];
   menuItems: MenuItem[];
   imageUrl: string;
   lastUpdate: string;
