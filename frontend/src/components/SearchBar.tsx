@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   searchQuery: z.string({
@@ -15,28 +16,32 @@ const formSchema = z.object({
 export type SearchForm = z.infer<typeof formSchema>;
 
 type Props = {
-  onSubmit: (FormData: SearchForm) => void;
-  placeholder: string;
+  onSubmit: (formData: SearchForm) => void;
+  placeHolder: string;
   onReset?: () => void;
+  searchQuery?: string;
 };
 
-const SearchBar = ({ onSubmit, onReset, placeholder }: Props) => {
+const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
   const form = useForm<SearchForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      searchQuery: "",
+      searchQuery,
     },
   });
+
+  useEffect(() => {
+    form.reset({ searchQuery });
+  }, [form, searchQuery]);
 
   const handleReset = () => {
     form.reset({
       searchQuery: "",
     });
+    if (onReset) {
+      onReset();
+    }
   };
-
-  if (onReset) {
-    onReset();
-  }
 
   return (
     <Form {...form}>
@@ -60,23 +65,21 @@ const SearchBar = ({ onSubmit, onReset, placeholder }: Props) => {
                 <Input
                   {...field}
                   className="border-none shadow-none text-xl focus-visible:ring-0"
-                  placeholder={placeholder}
+                  placeholder={placeHolder}
                 />
               </FormControl>
             </FormItem>
           )}
         />
 
-        {form.formState.isDirty && (
-          <Button
-            onClick={handleReset}
-            type="button"
-            variant="outline"
-            className="rounded-full"
-          >
-            Clear
-          </Button>
-        )}
+        <Button
+          onClick={handleReset}
+          type="button"
+          variant="outline"
+          className="rounded-full"
+        >
+          Reset
+        </Button>
         <Button type="submit" className="rounded-full bg-orange-500">
           Search
         </Button>
