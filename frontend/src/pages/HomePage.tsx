@@ -20,7 +20,7 @@ const HomePage = () => {
         </h1>
         <span className="text-xl">Food is just a click away</span>
         <SearchBar
-          placeholder="Search by city or town"
+          placeHolder="Search by city or town"
           onSubmit={handleSearchSubmit}
         />
       </div>
